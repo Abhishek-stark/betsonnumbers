@@ -1,95 +1,140 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { login, verifyingOtp, reset } from "../redux/features/userSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useAppDispatch, useAppSelector } from "./../redux/hooks";
+import "./Styles/Style.scss";
+import Loading from "./Components/Loading";
+import "./Styles/Formstyle.scss";
 
-export default function Home() {
+const Login = () => {
+  const [loginData, setloginData] = useState({
+    mobileNumber: "",
+    password: "",
+  });
+
+  const [otp, setotp] = useState({
+    getOtp: "",
+  });
+
+  const { mobileNumber, password } = loginData;
+  const { getOtp } = otp;
+
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { user,isLoading, isError, isSuccess, message, joinedUsers, signupmessage } =
+    useAppSelector((state) => state.user);
+
+  useEffect(() => {
+    if (isError) toast.error(message);
+    if (user?.data) router.push("/dashboard");
+    if(!user?.data) router.push("/")
+    if (isSuccess) toast.success(user?.message);
+    if (isLoading) <Loading/>;
+    dispatch(reset());
+  }, [user,isError, isLoading, isSuccess, dispatch, router, message, joinedUsers]);
+
+  useEffect(() => {
+    if (signupmessage?.message) toast.success(signupmessage?.message);
+  }, [signupmessage?.message]);
+
+  
+
+  const Onchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setloginData((prevData) => ({
+      ...prevData,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const Otpchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setotp((prevdata) => ({ ...prevdata, [e.target.name]: e.target.value }));
+  };
+
+  const Onsubmit = async (e: React.ChangeEvent<any>) => {
+    e.preventDefault();
+    const loginData = {
+      mobileNumber,
+      password,
+    };
+
+    dispatch(login(loginData));
+  };
+
+  const verifyOtp = async (e: React.ChangeEvent<any>) => {
+    e.preventDefault();
+    const otps = { getOtp };
+    dispatch(verifyingOtp(otps));
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
+    <div className="bodycontainer">
+      <ToastContainer />
+      <div className="main">
+        <input type="checkbox" id="chk" aria-hidden="true" />
+        <div className="signup">
+          <form onSubmit={Onsubmit}>
+            <label htmlFor="chk" aria-hidden="true">
+              Login
+            </label>
+            <input
+              type="text"
+              placeholder="MobileNumber"
+              required
+              minLength={10}
+              maxLength={10}
+              id="mobileNumber"
+              name="mobileNumber"
+              value={mobileNumber}
+              onChange={Onchange}
+              autoComplete="off"
             />
-          </a>
+            <input
+              type="password"
+              placeholder="Password"
+              required
+              minLength={10}
+              id="password"
+              name="password"
+              value={password}
+              onChange={Onchange}
+              autoComplete="off"
+            />
+
+            <button type="submit" className="btn--green">
+              Login
+            </button>
+            <div className="forgotandsignup">
+              <Link href={"/forgotpassword"}>Forgot Password ?</Link>
+              <Link href={"/signup"}>Sign Up</Link>
+            </div>
+          </form>
+        </div>
+        <div className="login">
+          <form onSubmit={verifyOtp}>
+            <label htmlFor="chk" aria-hidden="true">
+              verify Otp
+            </label>
+            <input
+              type="text"
+              placeholder="Enter Otp"
+              required
+              name="getOtp"
+              onChange={Otpchange}
+              value={getOtp}
+              maxLength={7}
+            />
+            <button className="btn--green" type="submit">
+              Verify
+            </button>
+          </form>
         </div>
       </div>
+    </div>
+  );
+};
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
-}
+export default Login;
