@@ -1,5 +1,10 @@
 import axios from "axios";
-const user = JSON.parse(localStorage.getItem("user") ||  "{}"  );
+
+let user:any
+if(typeof window !==undefined){
+    user= JSON.parse(localStorage.getItem("user") ||  "{}"  );
+}
+
 const url =
     process.env.BACKEND_URL;
 

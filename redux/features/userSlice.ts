@@ -2,17 +2,23 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import userService from "./../services/userService";
 
-const user = JSON.parse(localStorage.getItem("user")|| "{}");
-const signupmessage = JSON.parse(localStorage.getItem("signupmessage")|| "{}");
-// const userUpdate = JSON.parse(localStorage.getItem("userUpdate"));
-// const result = JSON.parse(localStorage.getItem("result"));
-const joinedUsers = JSON.parse(localStorage.getItem("joinedUsers")|| "{}");
+
+let user,signupmessage,joinedUsers;
+
+
+
+if(typeof window !=='undefined'){
+     user = JSON.parse(localStorage.getItem("user")|| "{}");
+    signupmessage = JSON.parse(localStorage.getItem("signupmessage")|| "{}");
+    
+    joinedUsers = JSON.parse(localStorage.getItem("joinedUsers")|| "{}");
+}
+
 
 const initialState:InitialState = {
     user: user ? user : null,
     signupmessage: signupmessage ? signupmessage : null,
-    // userUpdate: userUpdate ? userUpdate : null,
-    // result: result ? result : null,
+   
     joinedUsers: joinedUsers ? joinedUsers : null,
     isError: false,
     isSuccess: false,
