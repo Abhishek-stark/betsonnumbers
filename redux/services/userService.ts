@@ -1,7 +1,7 @@
 import axios from "axios";
 
 let user:any
-if(typeof window !==undefined){
+if(typeof window !== "undefined"){
     user= JSON.parse(localStorage.getItem("user") ||  "{}"  );
 }
 
