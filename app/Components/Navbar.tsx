@@ -23,8 +23,9 @@ const TimePage = () => {
   let minute = 3 - (minutes % 3);
   // let minute = minutes % 3;
   let second = 60 - getseconds;
-
+  const [gtuser, setuser] = useState<any>();
   useEffect(() => {
+    setuser(user);
     timer.current = window.setInterval(() => {
       if (timers > 0) {
         settimer((prev) => prev - 1);
@@ -39,13 +40,13 @@ const TimePage = () => {
       minute === 3 &&
       second === 7 &&
       user &&
-      (user?.data?.tenthjoin !== "No" ||
-        user?.data?.tweentyjoin !== "No" ||
-        user?.data?.fourtyjoin !== "No" ||
-        user?.data?.sixtyjoin !== "No" ||
-        user?.data?.seventyjoin !== "No" ||
-        user?.data?.hundredjoin !== "No" ||
-        user?.data?.oneFiftyjoin !== "No")
+      (gtuser?.data?.tenthjoin !== "No" ||
+        gtuser?.data?.tweentyjoin !== "No" ||
+        gtuser?.data?.fourtyjoin !== "No" ||
+        gtuser?.data?.sixtyjoin !== "No" ||
+        gtuser?.data?.seventyjoin !== "No" ||
+        gtuser?.data?.hundredjoin !== "No" ||
+        gtuser?.data?.oneFiftyjoin !== "No")
     ) {
       dispatch(checkColors());
       console.log("ColorCheck");
@@ -54,14 +55,14 @@ const TimePage = () => {
     if (
       minute === 3 &&
       second === 1 &&
-      user &&
-      (user?.data?.tenthjoin !== "No" ||
-        user?.data?.tweentyjoin !== "No" ||
-        user?.data?.fourtyjoin !== "No" ||
-        user?.data?.sixtyjoin !== "No" ||
-        user?.data?.seventyjoin !== "No" ||
-        user?.data?.hundredjoin !== "No" ||
-        user?.data?.oneFiftyjoin !== "No")
+      gtuser &&
+      (gtuser?.data?.tenthjoin !== "No" ||
+        gtuser?.data?.tweentyjoin !== "No" ||
+        gtuser?.data?.fourtyjoin !== "No" ||
+        gtuser?.data?.sixtyjoin !== "No" ||
+        gtuser?.data?.seventyjoin !== "No" ||
+        gtuser?.data?.hundredjoin !== "No" ||
+        gtuser?.data?.oneFiftyjoin !== "No")
     ) {
       dispatch(resetColor());
 
@@ -71,12 +72,22 @@ const TimePage = () => {
     return () => clearInterval(timer.current);
   }, [timers]);
 
+  const [sminute, setminute] = useState(0);
+  const [ssecond, setseconds] = useState(0);
+
+  // if upper two state sminute and ssecond remoe than do minute and second in below only
+
+  useEffect(() => {
+    setminute(minute);
+    setseconds(second);
+  }, [minute, second]);
+
   return (
     <div className="timebtn">
       <button className="timebtn--1">
         Remaining :
         <span className="timer">
-          {minute === 3 ? 0 : minute}:{second}
+          {sminute === 3 ? 0 : minute}:{ssecond}
         </span>
       </button>
     </div>
@@ -84,7 +95,7 @@ const TimePage = () => {
 };
 const Navbar = memo(() => {
   const router = useRouter();
-
+  const [show, notshow] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { user, isLoading, isError, message } = useAppSelector(
     (state) => state.user
@@ -94,7 +105,12 @@ const Navbar = memo(() => {
     router.push("/setting");
   };
 
+  const [gtuser, setuser] = useState<any>();
   useEffect(() => {
+    notshow(true);
+  });
+  useEffect(() => {
+    setuser(user);
     if (isError) console.log(message);
     dispatch(reset());
   }, [isError, router, message, dispatch]);
@@ -103,23 +119,27 @@ const Navbar = memo(() => {
     router.push("/signup");
   };
   return (
-    <div className="navdiv">
-      {user?.data ? (
-        <button className="navdiv__btn navdiv__btn--2" onClick={navigation}>
-          <AccountCircleIcon />
-        </button>
-      ) : null}
+    <>
+      {user && show ? (
+        <div className="navdiv">
+          {user?.data ? (
+            <button className="navdiv__btn navdiv__btn--2" onClick={navigation}>
+              <AccountCircleIcon />
+            </button>
+          ) : null}
 
-      <div className="  navdiv__btn--3">
-        {user?.data?.balance ? (
-          <span className="navdiv__btn--span">
-            <CurrencyRupee />
-            {user?.data?.balance}
-          </span>
-        ) : null}
-      </div>
-      <TimePage />
-    </div>
+          <div className="  navdiv__btn--3">
+            {user?.data?.balance ? (
+              <span className="navdiv__btn--span">
+                <CurrencyRupee />
+                {user?.data?.balance}
+              </span>
+            ) : null}
+          </div>
+          <TimePage />
+        </div>
+      ) : null}
+    </>
   );
 });
 

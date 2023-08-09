@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import "./../Styles/Formstyle.scss";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useSelector, useDispatch } from "react-redux";
+// import { useSelector, useDispatch } from "react-redux";
 import { reset, signup } from "../../redux/features/userSlice";
 // import Loading from "./Loading";
 import { useRouter } from "next/navigation";
@@ -41,7 +41,7 @@ const Registerpage = () => {
 
   useEffect(() => {
     if (isError) toast.error(signupmessage?.message || message);
-   
+
     if (isSuccess) router.push("/");
 
     dispatch(reset());
