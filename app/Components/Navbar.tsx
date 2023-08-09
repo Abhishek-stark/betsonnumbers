@@ -109,7 +109,7 @@ const Navbar = memo(() => {
     setuser(user);
     if (isError) console.log(message);
     dispatch(reset());
-  }, [isError, router, message, dispatch, user]);
+  }, [isError, router, message, dispatch]);
 
   const registerhandler = () => {
     router.push("/signup");
