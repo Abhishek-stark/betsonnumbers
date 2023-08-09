@@ -67,7 +67,7 @@ const updatePassword = async(userData:UpdatePassword) => {
     const response = await axios.patch(
         `https://bettingapp.onrender.com/api/updateMyPassword`,
         userData, {
-            headers: { Authorization: `Bearer ${user?.token}` },
+            // headers: { Authorization: `Bearer ${user?.token}` },
             withCredentials:true,
             
         }, 
