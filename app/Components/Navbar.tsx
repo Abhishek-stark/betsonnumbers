@@ -95,7 +95,7 @@ const TimePage = () => {
 };
 const Navbar = memo(() => {
   const router = useRouter();
-  const [show, notshow] = useState<boolean>(false);
+  const [getuser, setuser] = useState<any>();
   const dispatch = useAppDispatch();
   const { user, isLoading, isError, message } = useAppSelector(
     (state) => state.user
@@ -105,22 +105,18 @@ const Navbar = memo(() => {
     router.push("/setting");
   };
 
-  const [gtuser, setuser] = useState<any>();
-  useEffect(() => {
-    notshow(true);
-  });
   useEffect(() => {
     setuser(user);
     if (isError) console.log(message);
     dispatch(reset());
-  }, [isError, router, message, dispatch]);
+  }, [isError, router, message, dispatch, user]);
 
   const registerhandler = () => {
     router.push("/signup");
   };
   return (
     <>
-      {user && show ? (
+      {user && getuser ? (
         <div className="navdiv">
           {user?.data ? (
             <button className="navdiv__btn navdiv__btn--2" onClick={navigation}>

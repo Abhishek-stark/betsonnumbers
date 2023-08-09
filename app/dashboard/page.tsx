@@ -28,7 +28,7 @@ import {
 import FrontandBack from "./../Components/FrontandBack";
 
 const RotatingCard = () => {
-  const [show, notshow] = useState(false);
+  const [getuser, setuser] = useState<any>();
   const [flipbtnten, setflipbtnten] = useState(false);
   const [flipbtntweenty, setflipbtntweenty] = useState(false);
   const [flipbtnfourty, setflipbtnfourty] = useState(false);
@@ -43,9 +43,7 @@ const RotatingCard = () => {
     useAppSelector((state) => state.user);
 
   useEffect(() => {
-    notshow(true);
-  });
-  useEffect(() => {
+    setuser(user);
     if (isError) toast.error(user?.message);
     if (isSuccess) toast.success(user?.message);
     if (!user?.data) router.push("/");
@@ -269,7 +267,7 @@ const RotatingCard = () => {
 
   return (
     <>
-      {user && show ? (
+      {user && getuser ? (
         <section className="Cardsboxes">
           <ToastContainer />
           <div className="threecards">
